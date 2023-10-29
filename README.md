@@ -5,7 +5,7 @@ This documentation provides an overview of deploying a Banking Application using
 
 ## Issues
 Had an issue with Jenkins not deploying due to credential errors during the "plan" stage on the East EC2 instances. No issues were encountered on the West EC2s.  Have been unable to resolve credential error. I manually deployed the application by running the "Jenkinsfile" line by line and the ec2 instance deployed successfully.
-![image](Deployment5.1/Deployment5.1server1.png)
+![image](Deployment6-IMG/errorcodejenkins.png)
 
 ## Steps
 
@@ -97,7 +97,7 @@ Note: Encountered Credential Errors for East Region. Had to deploy manually to E
 - A CDN like AWS CloudFront could deliver content from edge locations reducing latency and making the application more available to users.
   
 ### System Diagram
-![image](Deployment5.1/Deployment5.1.png)
+![image](Deployment6-IMG/DEP6.png)
 
 ### Optimization
 To make this deployment more efficient, I would implement the following:
@@ -108,6 +108,19 @@ To make this deployment more efficient, I would implement the following:
 
 3. **Containerization:** Consider containerizing the banking application using Docker and deploying it on an orchestration platform like Kubernetes for more efficient management and scalability.
 
-![image](Deployment5.1/Deployment5.1server1.png)
-![image](Deployment5.1/Deployment5.1server2.png)
-![image](Deployment5.1/Deployment5.1Jenkins.png)
+# Bank App US-east-1a
+![image](Deployment6-IMG/1stBankServer.png)
+# Bank App US-east-1b
+![image](Deployment6-IMG/2ndBankServer.png)
+# Bank App US-west-2a
+![image](Deployment6-IMG/3rdBankServer.png)
+# Bank App US-west-2b
+![image](Deployment6-IMG/4thBankServer.png)
+# Jenkins Credential Failure
+![image](Deployment6-IMG/mainbranchfailed.png)
+# West Branch Successful Deploy
+![image](Deployment6-IMG/westbranchdeployed.png)
+# Load Balancer East
+![image](Deployment6-IMG/loadbalancereast.png)
+# Load Balancer West
+![image](Deployment6-IMG/loadbalancerwest.png)
