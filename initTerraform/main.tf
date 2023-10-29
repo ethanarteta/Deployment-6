@@ -3,12 +3,11 @@ provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
   region     = "us-west-2"
-  alias      = "us-west-2"
 }
 
 ###VPC2###
 resource "aws_vpc" "dep6vpc_US_west" {
-  cidr_block       = "10.0.0.0/16"
+  cidr_block       = "10.1.0.0/16"
   
   tags = {
     Name = "Dep6_vpc_West"
@@ -18,8 +17,8 @@ resource "aws_vpc" "dep6vpc_US_west" {
 ###SUBNET1###
 resource "aws_subnet" "PublicSubnet3" {
   vpc_id     = aws_vpc.dep6vpc_US_west.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-west-1a" 
+  cidr_block = "10.1.1.0/24"
+  availability_zone = "us-west-2a" 
   map_public_ip_on_launch = true
 
   tags = {
@@ -30,8 +29,8 @@ resource "aws_subnet" "PublicSubnet3" {
 ###SUBNET2###
 resource "aws_subnet" "PublicSubnet4" {
   vpc_id     = aws_vpc.dep6vpc_US_west.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "us-west-1b" 
+  cidr_block = "10.1.2.0/24"
+  availability_zone = "us-west-2b" 
   map_public_ip_on_launch = true
 
   tags = {
@@ -42,12 +41,12 @@ resource "aws_subnet" "PublicSubnet4" {
 
 ###INSTANCE3###
 resource "aws_instance" "BankApp03" {
-  ami                         = "ami-08c40ec9ead489470"
+  ami                         = "ami-0efcece6bed30fd98"
   instance_type               = "t2.micro"
   vpc_security_group_ids      = [aws_security_group.Dep6_SG_West.id]
-  availability_zone           = "us-west-1a"
+  availability_zone           = "us-west-2a"
   associate_public_ip_address = true
-  key_name                    = "Dep6KeyPair"
+  key_name                    = "dep6west"
   user_data                   = file("BankAppDeploy.sh")
   subnet_id                   = aws_subnet.PublicSubnet3.id
 
@@ -58,12 +57,12 @@ resource "aws_instance" "BankApp03" {
 
 ###INSTANCE4###
 resource "aws_instance" "BankApp04" {
-  ami                         = "ami-08c40ec9ead489470" 
+  ami                         = "ami-0efcece6bed30fd98" 
   instance_type               = "t2.micro"
   vpc_security_group_ids      = [aws_security_group.Dep6_SG_West.id]
   availability_zone           = "us-west-2b"
   associate_public_ip_address = true
-  key_name                    = "Dep6KeyPair"
+  key_name                    = "dep6west"
   subnet_id                   = aws_subnet.PublicSubnet4.id
   user_data                   = file("BankAppDeploy.sh")
 
@@ -108,11 +107,11 @@ tags = {
 }
 
 ###INTERNETGATEWAY2###
-resource "aws_internet_gateway" "D6GatewayWest" {
+resource "aws_internet_gateway" "gw_west" {
   vpc_id = aws_vpc.dep6vpc_US_west.id
 
   tags = {
-    Name = "GW_d6_West"
+    Name = "gw_d6_west"
   }
 }
 
@@ -121,18 +120,17 @@ resource "aws_route_table" "D6RouteWest" {
   vpc_id = aws_vpc.dep6vpc_US_west.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.D6GatewayWest.id
+    gateway_id = aws_internet_gateway.gw_west.id
   }
 }
 
 ###TableAssociation###
-
 resource "aws_route_table_association" "c" {
   subnet_id      = aws_subnet.PublicSubnet3.id
   route_table_id = aws_route_table.D6RouteWest.id
 }
 
 resource "aws_route_table_association" "d" {
-  subnet_id      = aws_subnet.PublicSubnet1.id
+  subnet_id      = aws_subnet.PublicSubnet4.id
   route_table_id = aws_route_table.D6RouteWest.id
 }
